@@ -1,7 +1,6 @@
 const express=require('express')
 const userRoute=express.Router()
 const database=require('../database')
-const {response} = require("express");
 
 const createUser = (firstname,lastname,username,password) => {
     if(password?.length>5 && username?.length>2 && lastname?.length>2 && firstname?.length>2){
@@ -48,12 +47,56 @@ userRoute.get('/:id',(req,res)=>{
     }else{
         res.status(500).send('missing required id')
     }
-
-
-
 })
 
 
+userRoute.delete('/:id',(req,res)=>{
+    const userId=Number(req.params.id)
+    if(userId){
+        const deleteQuery=`DELETE FROM users WHERE id=${userId}`
+        database.cmsDB.query(deleteQuery,(error,response)=>{
+            if(error){
+                res.status(500).send('error in connecting to database')
+            }else if(response.affectedRows>0){
+                res.status(200).send('user deleted')
+            }else{
+                res.status(501).send('user not found!')
+            }
+        })
+
+    }else{
+        res.status(500).send('missing required id')
+
+    }
+
+})
+
+userRoute.put('/:id',(req,res)=>{
+    const userId=Number(req.params.id)
+    if(userId){
+        const newUserData=createUser(req.body.firstname,req.body.lastname,req.body.username,req.body.password)
+        if(newUserData){
+            const updateQuery=`UPDATE users SET firstname="${newUserData.firstname}",lastname="${newUserData.lastname}",username="${newUserData.username}",password=${newUserData.password} WHERE id=${userId}`
+            database.cmsDB.query(updateQuery,(error,response)=>{
+                if(error){
+                    res.status(500).send('error in connecting to database')
+                }else if(response.affectedRows>0){
+                    res.status(200).send('user updated')
+                }else{
+                    res.status(501).send('user not found!')
+                }
+            })
+
+        }else{
+            res.status(200).send('user updated')
+        }
+
+    }else{
+        res.status(500).send('missing required id')
+    }
+
+
+})
 
 
 module.exports=userRoute
