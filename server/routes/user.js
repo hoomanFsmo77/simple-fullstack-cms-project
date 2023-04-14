@@ -11,25 +11,31 @@ const createUser = (firstname,lastname,username,password) => {
         return false
     }
 }
-
-
 userRoute.post('/register',(req,res)=>{
     const newUser=createUser(req.body.firstname,req.body.lastname,req.body.username,req.body.password)
     if(newUser){
-        const insertQuery=`INSERT INTO users VALUES(NULL,"${newUser.firstname}","${newUser.lastname}","${newUser.username}",${newUser.password},NULL)`
+        const insertQuery=`INSERT INTO users VALUES(NULL,"${newUser.firstname}","${newUser.lastname}","${newUser.username}","${newUser.password}",NULL)`
         database.cmsDB.query(insertQuery,(err,response)=>{
             if(err){
-                res.status(501).send('error in connecting to database')
+                res.send({
+                    isSuccessful:false,
+                    msg:'error in connecting to database'
+                })
             }else{
-                res.status(201).send('user added!')
+                res.send({
+                    isSuccessful:true,
+                    msg:'You registered successfully!'
+                })
             }
         })
 
     }else{
-        res.status(500).send('missing required body parameter: firstname | lastname | username | password')
+        res.send({
+            isSuccessful:false,
+            msg:'Please providing data like this: <br />1- firstname, lastname and username at least 2 characters.<br />2- password at least 5 characters.'
+        })
     }
 })
-
 userRoute.get('/:id',(req,res)=>{
     const userId=Number(req.params.id)
     if(userId){
@@ -48,8 +54,6 @@ userRoute.get('/:id',(req,res)=>{
         res.status(500).send('missing required id')
     }
 })
-
-
 userRoute.delete('/:id',(req,res)=>{
     const userId=Number(req.params.id)
     if(userId){
@@ -70,7 +74,6 @@ userRoute.delete('/:id',(req,res)=>{
     }
 
 })
-
 userRoute.put('/:id',(req,res)=>{
     const userId=Number(req.params.id)
     if(userId){
@@ -94,6 +97,38 @@ userRoute.put('/:id',(req,res)=>{
     }else{
         res.status(500).send('missing required id')
     }
+
+
+})
+userRoute.post('/login',(req,res)=>{
+    const body=req.body
+    if(body.username.length>2 && body.password.length>5){
+        const getUserQuery=`SELECT * FROM users WHERE username="${body.username}" AND password="${body.password}"`
+        database.cmsDB.query(getUserQuery,(error,response)=>{
+            if(error){
+                res.send({
+                    isSuccessful:false,
+                    msg:'error in connecting to database!'
+                })
+            }else if(response.length>0){
+                res.send({
+                    isSuccessful:true,
+                    userInfo:response[0]
+                })
+            }else{
+                res.send({
+                    isSuccessful:false,
+                    msg:'User not found!'
+                })
+            }
+        })
+    }else{
+        res.send({
+            isSuccessful:false,
+            msg:'Please providing data like this: <br />1- username at least 2 characters.<br />2- password at least 5 characters.'
+        })
+    }
+
 
 
 })

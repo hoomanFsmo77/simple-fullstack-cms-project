@@ -11,6 +11,7 @@
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.19.4",
     "@nuxt/image-edge": "^1.0.0-27919678.2f5b64b",
+    "@types/bootstrap": "^5.2.6",
     "babel-loader": "^8.2.5",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.6",
+    "bootstrap": "^5.2.3",
     "pinia": "^2.0.29"
   }
 }

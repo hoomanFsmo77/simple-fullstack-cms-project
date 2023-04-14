@@ -3,7 +3,7 @@ const usersRoute=express.Router()
 const database=require('../database')
 
 
-usersRoute.get('/all',(req,res)=>{
+usersRoute.get('/',(req,res)=>{
     const selectAllQuery=`SELECT * FROM users`
     database.cmsDB.query(selectAllQuery,(err,response)=>{
         if(err){
