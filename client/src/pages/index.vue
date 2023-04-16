@@ -28,8 +28,9 @@
             <input v-model="userInfo.password" type="password" class="form-control" id="password" placeholder="name@example.com">
             <label for="password">Password</label>
           </div>
-          <div class="d-flex justify-content-center">
+          <div class="d-flex flex-column justify-content-center align-items-center">
             <button @click="registerHandler" class="btn btn-primary">Register</button>
+            <p>Do you have account? <NuxtLink :to="{name:'LOGIN'}">login</NuxtLink></p>
           </div>
         </form>
       </div>
@@ -39,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({name:'REGISTER'})
 useHead({
   bodyAttrs:{
     style:'overflow:hidden'
@@ -74,7 +76,7 @@ const registerHandler = async () => {
    registerMassage.isSuccessful=register.isSuccessful
    if(register.isSuccessful){
      resetInputs()
-     navigateTo('/panel')
+     navigateTo('/login')
    }
  }catch (err) {
    console.log(err)
