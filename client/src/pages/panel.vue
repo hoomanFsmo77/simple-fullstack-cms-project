@@ -30,7 +30,7 @@
 definePageMeta({name:'PANEL'})
 useHead({
   bodyAttrs:{
-    style:'backgroundColor:#333'
+    style:'background-color:#333 !important'
   }
 })
 
@@ -43,7 +43,6 @@ const {data:allUsersData,error,pending:allUsersFlag}=await useAsyncData('allUser
 #users-list{
   background-color: #333;
   width: 100%;
-  height: 100%;
 }
 
 </style>
